@@ -1,0 +1,234 @@
+Go的语言特性和设计思想
+
+并行
+    GO让函数很容易成为非常轻量的线程，这些线程在GO中被叫做goroutines
+    
+Channel
+    goroutines之间的通讯由channel完成
+    
+安全
+    当转换一个类型到另一个类型的时候需要显示的转换，并遵循严格的规则
+    
+类型后置
+    类型实在变量名的后面
+    
+gofmt --- 格式化GO代码成统一风格
+Gofmt 可以自动将注释对齐；
+
+所有的GO文件以package "something"开头，对于独立运行的执行文件必须是package main
+
+在所有初始化完成后，程序从main包中的main函数(即，main.main())开始执行;
+
+常量字符串可以包含Unicode字符，采用UTF-8编码。实际上，所有的Go语言源文件都采用UTF-8编码。
+
+一个完整语句末尾的分号 都是有go编译器自动添加的——用户不需要输入语句结尾分号
+
+Go语言强制使用将开始大括弧放在同一行末尾的编码风格。
+
+Go是一个编译型的语言。目前有两种编译器，其中"Gccgo"采用GCC作为编译后端。另外还有 根据处理器架构命名的编译器：针对64位x86结构为"6g"，针对32位x86结构的为"8g"等等。
+
+*.go -> *.a -> *.out/*.exe
+
+当定义了一个变量，它的默认值为其类型的null值。这意味着，在var a int 后, a的值为0; 而var s string, 意味着s被赋值为零长度字符串，也就是""
+在GO中，声明和赋值是两个过程，但可以连在一起
+
+go可以根据初始值来判断变量的类型（变量的类型由值推演出来）， 没有必要显式写出数据类型
+var name type = *
+var name = *
+name := * 
+
+name := * //定义,其中=之前的:可以理解为定义变量的数据类型，变量的数据类型一旦定义就不能再修改
+name = * //改变
+两者语法上可以有差别，有些类型只允许定义，不允许改变 
+":"符号的作用类似于变量名前面的var
+
+相同类型的多个变量可以在一行内完成声明
+var x,y int
+x,y := 12,24
+
+一个特殊的变量名是_(下划线)，任何赋给它的值都被丢弃，用于不希望获取某个值的场合
+
+GO的编译器对声明却未使用的变量会报错
+
+操作符":="在Go中声明同时进行初始化一个变量
+
+第一，for是Go中唯一的循环语句，Go中没有while或 do语句；
+第二，for的条件语句并不需要用小括号包起来，但是循环体却必须要花括弧，这个规则同样适用于 if和switch;
+
+go中的字符串是一个内建数据类型。字符串虽然是字符序列，但并不是一个字符数组。可以创建新的字符串，但是不能改变字符串。
+数组和字符串一样也是一个值对象，不过数组的元素是可以修改的。
+
+数组的大小是数组类型的一部分
+
+在Go语言中，大部分的类型都是值变量。例如int或struct(结构体)或array(数组)类型变量， 赋值的时候都是复制整个元素。如果需要为一个值类型的变量分配空间，可以用new()
+
+在Go语言中，系统不会对两种不同类型变量作 任何隐式的类型转换。此外，由常数初始化的变量需要指定确定的类型和大小。
+
+type: 用于定义新的数据类型
+
+type 可以理解为定义类型的名称/别名
+
+参数用pass-by-value方式传递，意味着它们会被复制；
+
+
+defer: 在defer后指定的函数会在函数退出前调用
+    可以将多个函数放入"延迟列表"中
+    延迟的函数是按照后进先出的顺序执行，即堆栈机制
+    
+
+
+圆括号的使用：
+var (
+    a int
+    b string
+    c bool
+)
+const(
+    a = 1
+    b = "abc"
+    c = false
+)
+import(
+    "fmt"
+    "net/http"
+)
+
+
+数据类型：
+    布尔类型bool  
+    数字类型(int, uint, int8,int16,int32,int64,byte, 其中byte是uint8的别名,  float32, float64)  
+    常量
+    iota 希腊文的第九个字母；极小量；用于生成枚举值
+    字符串string
+        字符串在GO中是utf-8的，由双引号(")包裹的字符序列；
+        如果使用单引号('), 则表示一个字符；
+        一旦给变量赋值，字符串就不能修改；
+        多行字符串用加号(+)联结
+    rune
+        一种古代北欧文字
+        int32的别名
+        用于字符串中的字符遍历
+    复数complex128 complex64
+        包含实部、虚部
+        形如：re + imi
+    
+
+控制结构
+    if-else
+        例：
+            f, err := os.open(filename, os.O_RDONLY)
+            if err != nil {
+                return err
+            }
+        GO中强制{必须和if在同一行
+        
+    goto
+        跳转到一定是当前函数内定义的标签
+        标签名是大小写敏感的
+        
+    for
+        for init; condition; post {
+            //...
+        }
+        for condition {
+            //和while一样
+        }
+        for {
+            //死循环
+        }
+        
+        break, continue语句
+        range迭代器, 可用于slice, array, string, map, channel，当被调用时，从它循环的内容中返回一个键值对
+            例:
+                k, v := range list
+                
+    switch-case
+    
+
+内建类型array, slice, map
+    array：
+        由[n]<type>定义，n标示array的长度，<type>标示希望存储的内容的类型；      
+        对array的元素赋值或索引是由方括号完成的；
+        数组是值类型的，将一个数组赋值给另一个数组，会复制所有元素，作为参数传递，会获得一个数组的副本
+        不能改变大小       
+        
+    slice: 一个指向底层array的指针(可以理解为array片段)
+        与array接近，但是在新的元素加入的时候可以增加长度
+        slice是一个指向array的指针，slice总是指向底层的一个array
+        slice是引用类型，当赋值某个slice到另外一个变量，两个引用会指向同一个array
+        slice总是与一个固定长度的array成对出现，其影响slice的容量和长度
+        
+        函数append向slices追加零值或其他x值，并且返回追加后的新的、与s有相同类型的slice。如果s没有足够的容量存储追加的值，append分配一个足够大的、新的slice来存放原有slice的元素和追加的值。因此，返回的slice可能指向不同的底层array。
+        
+        
+    map:
+        map[from type]<to type>
+        map可以认为是一个用字符串做索引的数组
+        当只需要声明一个map的时候，使用make形式：
+            dict := make(map[from type]<to type>)
+            
+    
+  
+预定义函数  
+    close:  用于关闭channel通讯
+    delete:  用于在map中删除实例
+    len: 用于返回string, slice, array的长度
+    cap: ...
+    new: 用于各种类型的内存分配
+    make: 用于内建类型(map, slice, channel)的内存分配
+    copy: 用于复制slice
+    append: 用于追加slice
+    panic, recover: 用于异常处理
+        panic: 恐慌
+        recover: 恢复
+    print, println: 是底层打印函数，可以在不引入fmt包的情况下使用，主要用于调试
+    complex, real, imag: 用于处理复数
+    
+
+函数
+
+    匿名函数：
+        func(){/*...*/}()
+        
+    
+包
+    包是函数和数据的集合；
+    用package定义一个包；
+    文件名不需要与包名一致；
+    包名使用小写字符；
+    包可以由多个文件组成，但使用相同的package <name>这一行
+    
+
+os
+    文件系统
+    
+os/exec
+    命令行
+    
+io
+
+net/http
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
