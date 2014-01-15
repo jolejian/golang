@@ -155,7 +155,12 @@ import(
         由[n]<type>定义，n标示array的长度，<type>标示希望存储的内容的类型；      
         对array的元素赋值或索引是由方括号完成的；
         数组是值类型的，将一个数组赋值给另一个数组，会复制所有元素，作为参数传递，会获得一个数组的副本
-        不能改变大小       
+        不能改变大小
+        
+        可以通过取地址符&生成一个指向数组的指针，
+        例如 
+        var b [3]int = {1,2,3}
+        var a *[3]int = &b
         
     slice: 一个指向底层array的指针(可以理解为array片段)
         与array接近，但是在新的元素加入的时候可以增加长度
@@ -171,6 +176,41 @@ import(
         map可以认为是一个用字符串做索引的数组
         当只需要声明一个map的时候，使用make形式：
             dict := make(map[from type]<to type>)
+            
+    struct:
+        值类型
+        new(struct)返回一个指向零值的指针，Go语言中struct变量使用一般以指针的形态出现
+        使用符号.来访问成员(无论是值类型的变量还是指针类型变量都是使用.符号来访问成员, 即成员的访问是隐式传递指针，类似php)
+        匿名字段的方式实现继承
+        
+        Go放弃了包含继承在内的大量面向对象特性，只保留了组合这个最基础的特性
+        组合是形成复合类型的基础
+        
+        代码：
+            package main
+
+            import "fmt"
+
+            type A struct{
+                x int
+                y string
+            }
+
+            func main() {
+                a:=A{2, "abc"}
+                b:=&a
+                
+                if a.x == b.x {
+                    fmt.Println("a.x == b.x")
+                } else {
+                    fmt.Println("a.x != b.x")
+                }     
+            }
+            
+        输出：
+            a.x == b.x
+                
+ 
             
     
   
@@ -236,4 +276,3 @@ net/http
     
     
     
-
